@@ -1,4 +1,51 @@
 {
   "name": "bee-agent-framework-starter",
-  "packageManager": "yarn@4.1.1"
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": "^10.0.0"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "main": "./dist/agent.js",
+  "types": "./dist/agent.d.ts",
+  "homepage": "https://github.com/i-am-bee/bee-agent-framework-starter#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/i-am-bee/bee-agent-framework-starter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/i-am-bee/bee-agent-framework-starter/issues"
+  },
+  "scripts": {
+    "start": "tsx ./src/agent.ts -p tsconfig.json",
+    "build": "rimraf dist && tsc",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write ."
+  },
+  "dependencies": {
+    "bee-agent-framework": "^0.0.17",
+    "dotenv": "^16.4.5",
+    "ollama": "^0.5.9",
+    "pino": "^9.4.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.10.0",
+    "@types/eslint__js": "^8.42.3",
+    "@types/eslint-config-prettier": "^6.11.3",
+    "@types/node": "^18.15.3",
+    "eslint": "^9.10.0",
+    "eslint-config-prettier": "^9.1.0",
+    "pino-pretty": "^11.2.2",
+    "prettier": "^3.3.3",
+    "rimraf": "^5.0.10",
+    "tsx": "^4.19.1",
+    "typescript": "~5.5.4",
+    "typescript-eslint": "^8.6.0"
+  },
+  "packageManager": "npm@10.7.0"
 }
