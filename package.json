@@ -28,7 +28,7 @@
     "format:fix": "prettier --write ."
   },
   "dependencies": {
-    "bee-agent-framework": "^0.0.17",
+    "bee-agent-framework": "^0.0.22",
     "dotenv": "^16.4.5",
     "ollama": "^0.5.9",
     "pino": "^9.4.0"
