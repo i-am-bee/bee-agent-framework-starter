@@ -12,6 +12,8 @@ const llm = new OllamaChatLLM({
   modelId: "llama3.1",
   parameters: {
     temperature: 0,
+    repeat_penalty: 1,
+    num_predict: 2000
   },
 });
 
