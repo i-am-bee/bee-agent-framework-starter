@@ -21,14 +21,20 @@
   },
   "scripts": {
     "start": "tsx ./src/agent.ts -p tsconfig.json",
+    "start:observe": "tsx ./src/agent_observe.ts -p tsconfig.json",
     "build": "rimraf dist && tsc",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "format": "prettier --check .",
-    "format:fix": "prettier --write ."
+    "format:fix": "prettier --write .",
+    "infra:start-all": "docker compose up -d",
+    "infra:start-observe": "docker compose up -d redis mongo mlflow observe_api_migration observe_api ",
+    "infra:stop-all": "docker compose down",
+    "infra:clean-all": "docker compose down --volumes"
   },
   "dependencies": {
     "bee-agent-framework": "^0.0.27",
+    "bee-observe-connector": "^0.0.3",
     "dotenv": "^16.4.5",
     "ollama": "^0.5.9",
     "pino": "^9.4.0"
