@@ -56,15 +56,16 @@ try {
             console.error(`Agent 🤖 : `, ObserveError.ensure(err).explain());
           } else {
             const { id, response } = data?.result || {};
-            console.log(`Agent 🤖 : `, response?.text || "Invalid output");
+            console.info(`Observe 🔎 : `, response?.text || "Invalid output");
 
             // you can use `&include_mlflow_tree=true` as well to return all sent data to mlflow
-            console.log(
-              `Agent 🤖 : Call the Observe API via this curl command outside of this Interactive session and see the trace data in the "trace.json" file: \n\n`,
+            console.info(
+              `Observe 🔎 : Call the Observe API via this curl command outside of this Interactive session and see the trace data in the "trace.json" file: \n\n`,
               `curl -X GET "${beeObserveApiSetting.baseUrl}/trace/${id}?include_tree=true&include_mlflow=true" \\
 \t-H "x-bee-authorization: ${beeObserveApiSetting.apiAuthKey}" \\
 \t-H "Content-Type: application/json" \\
-\t-o tmp/observe/trace.json`,
+\t-o ${process.cwd()}/tmp/observe/trace.json`,
+              `\n`,
             );
           }
         },

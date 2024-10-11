@@ -15,6 +15,7 @@
 >
 > - [Docker](https://www.docker.com/)
 > - [Rancher](https://www.rancher.com/) - macOS users may want to use VZ instead of QEMU
+> - [Podman](https://podman.io/) - requires [compose](https://podman-desktop.io/docs/compose/setting-up-compose) and **rootful machine** (if your current machine is rootless, please create a new one)
 
 Get full visibility of the agent's inner working via our observability stack.
 
@@ -22,7 +23,12 @@ Get full visibility of the agent's inner working via our observability stack.
 - The [Bee Observe](https://github.com/i-am-bee/bee-observe) is the main Open-source observability service for Bee Agent Framework.
 - The [Bee Observe Connector](https://github.com/i-am-bee/bee-observe-connector) is the observability connector for Bee Agent Framework
 
+Configuration (ENV variables) can be found [here](./infra/observe/.env.docker).
+
 ### Steps
 
 1. Start all services related to Observe `npm run infra:start-observe`
-2. Start the agent using the observe and MLFlow `npm run start:observe` (it runs ./src/agent_observe.ts file). The output of the `curl` command is saved in the **./tmp/observe/trace.json** file
+2. Start the agent using the observe and MLFlow `npm run start:observe` (it runs the `./src/agent_observe.ts` file).
+3. Run the `curl` command that retrieves data from Bee Observe and passes them to the `MLFlow` instance.
+4. Access MLFlow web application [`http://localhost:8080/#/experiments/`](http://localhost:8080/#/experiments/)
+   - Credentials: (user: `admin`, password: `password`)
