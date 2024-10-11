@@ -7,6 +7,8 @@ import { OpenMeteoTool } from "bee-agent-framework/tools/weather/openMeteo";
 import { OllamaChatLLM } from "bee-agent-framework/adapters/ollama/chat";
 import * as fs from "node:fs";
 import * as process from "node:process";
+import { createObserveConnector, ObserveError } from "bee-observe-connector";
+import { beeObserveApiSetting } from "./helpers/observe.js";
 
 const llm = new OllamaChatLLM({
   modelId: "llama3.1",
@@ -46,11 +48,29 @@ try {
         },
       },
     )
-    .observe((emitter) => {
-      emitter.on("update", (data) => {
-        console.info(`Agent 🤖 (${data.update.key}) : ${data.update.value}`);
-      });
-    });
+    .middleware(
+      createObserveConnector({
+        api: beeObserveApiSetting,
+        cb: async (err, data) => {
+          if (err) {
+            console.error(`Agent 🤖 : `, ObserveError.ensure(err).explain());
+          } else {
+            const { id, response } = data?.result || {};
+            console.log(`Agent 🤖 : `, response?.text || "Invalid output");
+
+            // you can use `&include_mlflow_tree=true` as well to return all sent data to mlflow
+            console.log(
+              `Agent 🤖 : Call the Observe API via this curl command outside of this Interactive session and see the trace data in the "trace.json" file: \n\n`,
+              `curl -X GET "${beeObserveApiSetting.baseUrl}/trace/${id}?include_tree=true&include_mlflow=true" \\
+\t-H "x-bee-authorization: ${beeObserveApiSetting.apiAuthKey}" \\
+\t-H "Content-Type: application/json" \\
+\t-o tmp/observe/trace.json`,
+            );
+          }
+        },
+      }),
+    );
+
   console.info(`Agent 🤖 : ${response.result.text}`);
 } catch (error) {
   console.error(FrameworkError.ensure(error).dump());
