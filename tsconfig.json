@@ -19,5 +19,5 @@
     "skipLibCheck": true,
     "strictNullChecks": true
   },
-  "exclude": ["node_modules", "dist", "eslint.config.js", "prettier.config.js"]
+  "include": ["src"]
 }
