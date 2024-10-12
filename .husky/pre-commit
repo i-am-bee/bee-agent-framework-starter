@@ -1,0 +1,2 @@
+npx lint-staged
+CI=true npm run ts:check && npm run lint && npm run format

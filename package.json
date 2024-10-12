@@ -22,6 +22,7 @@
   "scripts": {
     "start": "tsx ./src/agent.ts -p tsconfig.json",
     "start:observe": "tsx ./src/agent_observe.ts -p tsconfig.json",
+    "ts:check": "tsc --noEmit --project tsconfig.json",
     "build": "rimraf dist && tsc",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
@@ -30,7 +31,8 @@
     "infra:start-all": "docker compose up -d",
     "infra:start-observe": "docker compose up -d redis mongo mlflow observe_api_migration observe_api ",
     "infra:stop-all": "docker compose down",
-    "infra:clean-all": "docker compose down --volumes"
+    "infra:clean-all": "docker compose down --volumes",
+    "prepare": "husky"
   },
   "dependencies": {
     "bee-agent-framework": "^0.0.28",
@@ -46,6 +48,8 @@
     "@types/node": "^18.15.3",
     "eslint": "^9.10.0",
     "eslint-config-prettier": "^9.1.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "pino-pretty": "^11.2.2",
     "prettier": "^3.3.3",
     "rimraf": "^5.0.10",
@@ -53,5 +57,9 @@
     "typescript": "~5.5.4",
     "typescript-eslint": "^8.6.0"
   },
-  "packageManager": "npm@10.7.0"
+  "packageManager": "npm@10.7.0",
+  "lint-staged": {
+    "*.{ts,js}": "eslint --fix",
+    "*": "prettier --ignore-unknown --write"
+  }
 }
