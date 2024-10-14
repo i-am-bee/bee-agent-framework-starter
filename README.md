@@ -1,11 +1,19 @@
-# bee-agent-framework-starter
+# Bee Agent Framework Starter
+
+This starter template allows you to easily start working with the [Bee Agent Framework](https://github.com/i-am-bee/bee-agent-framework) in a second.
+
+## Key Features
+
+- ✨ Safely execute an arbitrary Python Code via [Bee Code Interpreter](https://github.com/i-am-bee/bee-code-interpreter).
+- ✨ Get complete visibility into agents’ decisions using our MLFlow integration thanks to [Bee Observe](https://github.com/i-am-bee/bee-observe).
+- ✨ Fully fledged TypeScript project setup with linting and formatting.
 
 ## Getting started
 
-1. Clone the repository `git clone git@github.com:i-am-bee/bee-agent-framework-starter`.
-2. Install dependencies `npm ci`
-3. Create `.env` (from `.env.template`) and fill in missing values (if any).
-4. Start the example `npm run start` (it runs the ./src/agent.ts file).
+1. Clone the repository `git clone git@github.com:i-am-bee/bee-agent-framework-starter` or create your own repository from this one.
+2. Install dependencies `npm ci`.
+3. Fill missing values in `.env`.
+4. Run the agent `npm run start` (it runs the `./src/agent.ts` file).
 
 ## Infrastructure
 
