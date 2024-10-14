@@ -104,7 +104,6 @@ dist
 # vuepress v2.x temp and cache directory
 .temp
 .cache
-tmp
 
 # Docusaurus cache and generated files
 .docusaurus
@@ -133,3 +132,12 @@ tmp
 
 /.idea
 /experiments
+
+# Infrastructure related
+infra/bee-code-interpreter/*
+!infra/bee-code-interpreter/k8s/bee-code-interpreter.yaml
+
+# Code interpreter data
+/tmp/observe/*
+/tmp/code_interpreter_target/*
+/tmp/code_interpreter_source/*

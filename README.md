@@ -7,7 +7,7 @@
 3. Create `.env` (from `.env.template`) and fill in missing values (if any).
 4. Start the example `npm run start` (it runs the ./src/agent.ts file).
 
-## Using observability
+## Infrastructure
 
 > [!NOTE]
 >
@@ -25,9 +25,19 @@ Get full visibility of the agent's inner working via our observability stack.
 
 Configuration (ENV variables) can be found [here](./infra/observe/.env.docker).
 
-### Steps
+## Code interpreter
 
-1. Start all services related to Observe `npm run infra:start-observe`
+### Instructions
+
+1. Start all services related to Code Interpreter `npm run infra:start --profile=code_interpreter`
+2. Add `CODE_INTERPRETER_URL=http://127.0.0.1:50051` to your `.env` (if `.env` does not exist, create one from `.env.template`).
+3. Run the agent `npm run start:code_interpreter` (it runs the `./src/agent_code_interpreter.ts` file)
+
+## Observability
+
+### Instructions
+
+1. Start all services related to Observe `npm run infra:start --profile=observe`
 2. Start the agent using the observe and MLFlow `npm run start:observe` (it runs the `./src/agent_observe.ts` file).
 3. Run the `curl` command that retrieves data from Bee Observe and passes them to the `MLFlow` instance.
 4. Access MLFlow web application [`http://localhost:8080/#/experiments/`](http://localhost:8080/#/experiments/)
