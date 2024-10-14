@@ -1,5 +1,8 @@
 services:
   mongo:
+    profiles:
+      - all
+      - observe
     image: mongo:7.0.14
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongo
@@ -11,6 +14,9 @@ services:
       timeout: 5s
       retries: 5
   redis:
+    profiles:
+      - all
+      - observe
     image: redis:7
     command: redis-server --save 20 1 --loglevel warning
     healthcheck:
@@ -19,6 +25,9 @@ services:
       timeout: 5s
       retries: 5
   mlflow:
+    profiles:
+      - all
+      - observe
     image: bitnami/mlflow:2.14.1
     ports:
       - "8080:8080"
@@ -33,6 +42,9 @@ services:
     volumes:
       - ./infra/observe/entrypoint.sh:/entrypoint.sh:ro
   observe_api_migration:
+    profiles:
+      - all
+      - observe
     image: iambeeagent/bee-observe:0.0.3
     entrypoint: "npx mikro-orm migration:up --config ./dist/mikro-orm.config.js"
     env_file:
@@ -45,6 +57,9 @@ services:
       redis:
         condition: service_started
   observe_api:
+    profiles:
+      - all
+      - observe
     image: iambeeagent/bee-observe:0.0.3
     ports:
       - "4002:3000"
@@ -57,3 +72,6 @@ services:
       retries: 5
     depends_on:
       - observe_api_migration
+
+volumes:
+  k3s-containerd:

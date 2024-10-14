@@ -20,19 +20,20 @@
     "url": "https://github.com/i-am-bee/bee-agent-framework-starter/issues"
   },
   "scripts": {
-    "start": "tsx ./src/agent.ts -p tsconfig.json",
-    "start:observe": "tsx ./src/agent_observe.ts -p tsconfig.json",
+    "start": "tsx ./src/agent.ts",
+    "start:observe": "tsx ./src/agent_observe.ts",
     "ts:check": "tsc --noEmit --project tsconfig.json",
     "build": "rimraf dist && tsc",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
-    "infra:start-all": "docker compose up -d",
-    "infra:start-observe": "docker compose up -d redis mongo mlflow observe_api_migration observe_api ",
-    "infra:stop-all": "docker compose down",
-    "infra:clean-all": "docker compose down --volumes",
-    "prepare": "husky"
+    "infra:start": "npm run _docker -- compose --profile=${npm_config_profile:=all} up --detach --wait",
+    "infra:stop": "npm run _docker -- compose --profile=${npm_config_profile:=all} down",
+    "infra:remove": "npm run infra:stop -- --volumes",
+    "_ensure_env": "cp -n .env.template .env || true",
+    "_docker": "npm run _ensure_env && bash -c 'source ./.env && docker_cmd=$(which docker >/dev/null 2>&1 && printf docker || printf podman) && $docker_cmd \"$@\"' sh",
+    "prepare": "husky && npm run _ensure_env"
   },
   "dependencies": {
     "bee-agent-framework": "^0.0.28",

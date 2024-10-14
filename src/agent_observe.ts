@@ -9,6 +9,11 @@ import * as fs from "node:fs";
 import * as process from "node:process";
 import { createObserveConnector, ObserveError } from "bee-observe-connector";
 import { beeObserveApiSetting } from "./helpers/observe.js";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import * as path from "node:path";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const llm = new OllamaChatLLM({
   modelId: "llama3.1",
@@ -61,10 +66,10 @@ try {
             // you can use `&include_mlflow_tree=true` as well to return all sent data to mlflow
             console.info(
               `Observe 🔎 : Call the Observe API via this curl command outside of this Interactive session and see the trace data in the "trace.json" file: \n\n`,
-              `curl -X GET "${beeObserveApiSetting.baseUrl}/trace/${id}?include_tree=true&include_mlflow=true" \\
+              `curl -s "${beeObserveApiSetting.baseUrl}/trace/${id}?include_tree=true&include_mlflow=true" \\
 \t-H "x-bee-authorization: ${beeObserveApiSetting.apiAuthKey}" \\
 \t-H "Content-Type: application/json" \\
-\t-o ${process.cwd()}/tmp/observe/trace.json`,
+\t-o ${path.join(__dirname, "/../tmp/observe/trace.json")}`,
               `\n`,
             );
           }
