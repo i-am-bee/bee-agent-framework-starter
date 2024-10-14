@@ -25,14 +25,6 @@ This starter template allows you to easily start working with the [Bee Agent Fra
 > - [Rancher](https://www.rancher.com/) - macOS users may want to use VZ instead of QEMU
 > - [Podman](https://podman.io/) - requires [compose](https://podman-desktop.io/docs/compose/setting-up-compose) and **rootful machine** (if your current machine is rootless, please create a new one)
 
-Get full visibility of the agent's inner working via our observability stack.
-
-- The [MLFlow](https://mlflow.org/) is used as UI for observability.
-- The [Bee Observe](https://github.com/i-am-bee/bee-observe) is the main Open-source observability service for Bee Agent Framework.
-- The [Bee Observe Connector](https://github.com/i-am-bee/bee-observe-connector) is the observability connector for Bee Agent Framework
-
-Configuration (ENV variables) can be found [here](./infra/observe/.env.docker).
-
 ## Code interpreter
 
 ### Instructions
@@ -42,6 +34,14 @@ Configuration (ENV variables) can be found [here](./infra/observe/.env.docker).
 3. Run the agent `npm run start:code_interpreter` (it runs the `./src/agent_code_interpreter.ts` file)
 
 ## Observability
+
+Get full visibility of the agent's inner working via our observability stack.
+
+- The [MLFlow](https://mlflow.org/) is used as UI for observability.
+- The [Bee Observe](https://github.com/i-am-bee/bee-observe) is the main Open-source observability service for Bee Agent Framework.
+- The [Bee Observe Connector](https://github.com/i-am-bee/bee-observe-connector) is the observability connector for Bee Agent Framework
+
+Configuration (ENV variables) can be found [here](./infra/observe/.env.docker).
 
 ### Instructions
 
