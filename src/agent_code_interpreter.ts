@@ -1,8 +1,6 @@
 import "dotenv/config.js";
 import { BeeAgent } from "bee-agent-framework/agents/bee/agent";
 import { FrameworkError } from "bee-agent-framework/errors";
-import { OllamaChatLLM } from "bee-agent-framework/adapters/ollama/chat";
-import * as fs from "node:fs";
 import * as process from "node:process";
 import { PythonTool } from "bee-agent-framework/tools/python/python";
 import { dirname } from "node:path";
@@ -10,6 +8,8 @@ import { fileURLToPath } from "node:url";
 import { UnconstrainedMemory } from "bee-agent-framework/memory/unconstrainedMemory";
 import { LocalPythonStorage } from "bee-agent-framework/tools/python/storage";
 import { CustomTool } from "bee-agent-framework/tools/custom";
+import { getChatLLM } from "./helpers/llm.js";
+import { getPrompt } from "./helpers/prompt.js";
 
 const codeInterpreterUrl = process.env.CODE_INTERPRETER_URL;
 if (!codeInterpreterUrl) {
@@ -19,9 +19,7 @@ if (!codeInterpreterUrl) {
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const agent = new BeeAgent({
-  llm: new OllamaChatLLM({
-    modelId: "llama3.1",
-  }),
+  llm: getChatLLM(),
   memory: new UnconstrainedMemory(),
   tools: [
     new PythonTool({
@@ -61,16 +59,8 @@ def get_riddle() -> dict[str, str] | None:
   ],
 });
 
-const getPrompt = () => {
-  const fallback = `Generate a random riddle.`;
-  if (process.stdin.isTTY) {
-    return fallback;
-  }
-  return fs.readFileSync(process.stdin.fd).toString().trim() || fallback;
-};
-
 try {
-  const prompt = getPrompt();
+  const prompt = getPrompt(`Generate a random riddle.`);
   console.info(`User 👤 : ${prompt}`);
 
   const response = await agent

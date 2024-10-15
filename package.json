@@ -37,11 +37,15 @@
     "prepare": "husky && npm run _ensure_env"
   },
   "dependencies": {
-    "bee-agent-framework": "^0.0.29",
+    "bee-agent-framework": "^0.0.30",
     "bee-observe-connector": "^0.0.3",
     "dotenv": "^16.4.5",
+    "groq-sdk": "^0.7.0",
     "ollama": "^0.5.9",
-    "pino": "^9.4.0"
+    "openai": "^4.67.3",
+    "openai-chat-tokens": "^0.2.8",
+    "pino": "^9.4.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.10.0",

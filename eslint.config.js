@@ -13,7 +13,9 @@ export default tseslint.config(
   prettierConfig,
   {
     rules: {
-      curly: ["error", "all"],
+      "curly": ["error", "all"],
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": ["error"],
     },
   },
 );

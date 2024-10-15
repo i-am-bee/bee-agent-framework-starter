@@ -4,35 +4,19 @@ import { FrameworkError } from "bee-agent-framework/errors";
 import { TokenMemory } from "bee-agent-framework/memory/tokenMemory";
 import { DuckDuckGoSearchTool } from "bee-agent-framework/tools/search/duckDuckGoSearch";
 import { OpenMeteoTool } from "bee-agent-framework/tools/weather/openMeteo";
-import { OllamaChatLLM } from "bee-agent-framework/adapters/ollama/chat";
-import * as fs from "node:fs";
 import * as process from "node:process";
+import { getChatLLM } from "./helpers/llm.js";
+import { getPrompt } from "./helpers/prompt.js";
 
-const llm = new OllamaChatLLM({
-  modelId: "llama3.1",
-  parameters: {
-    temperature: 0,
-    repeat_penalty: 1,
-    num_predict: 2000,
-  },
-});
-
+const llm = getChatLLM();
 const agent = new BeeAgent({
   llm,
   memory: new TokenMemory({ llm }),
-  tools: [new DuckDuckGoSearchTool(), new OpenMeteoTool()],
+  tools: [new OpenMeteoTool(), new DuckDuckGoSearchTool()],
 });
 
-const getPrompt = () => {
-  const fallback = `What is the current weather in Las Vegas?`;
-  if (process.stdin.isTTY) {
-    return fallback;
-  }
-  return fs.readFileSync(process.stdin.fd).toString().trim() || fallback;
-};
-
 try {
-  const prompt = getPrompt();
+  const prompt = getPrompt(`What is the current weather in Las Vegas?`);
   console.info(`User 👤 : ${prompt}`);
 
   const response = await agent
@@ -42,7 +26,7 @@ try {
         execution: {
           maxIterations: 8,
           maxRetriesPerStep: 3,
-          totalMaxRetries: 10,
+          totalMaxRetries: 0,
         },
       },
     )

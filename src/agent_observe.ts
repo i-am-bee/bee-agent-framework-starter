@@ -4,25 +4,18 @@ import { FrameworkError } from "bee-agent-framework/errors";
 import { TokenMemory } from "bee-agent-framework/memory/tokenMemory";
 import { DuckDuckGoSearchTool } from "bee-agent-framework/tools/search/duckDuckGoSearch";
 import { OpenMeteoTool } from "bee-agent-framework/tools/weather/openMeteo";
-import { OllamaChatLLM } from "bee-agent-framework/adapters/ollama/chat";
-import * as fs from "node:fs";
 import * as process from "node:process";
 import { createObserveConnector, ObserveError } from "bee-observe-connector";
 import { beeObserveApiSetting } from "./helpers/observe.js";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as path from "node:path";
+import { getChatLLM } from "./helpers/llm.js";
+import { getPrompt } from "./helpers/prompt.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const llm = new OllamaChatLLM({
-  modelId: "llama3.1",
-  parameters: {
-    temperature: 0,
-    repeat_penalty: 1,
-    num_predict: 2000,
-  },
-});
+const llm = getChatLLM();
 
 const agent = new BeeAgent({
   llm,
@@ -30,16 +23,8 @@ const agent = new BeeAgent({
   tools: [new DuckDuckGoSearchTool(), new OpenMeteoTool()],
 });
 
-const getPrompt = () => {
-  const fallback = `What is the current weather in Las Vegas?`;
-  if (process.stdin.isTTY) {
-    return fallback;
-  }
-  return fs.readFileSync(process.stdin.fd).toString().trim() || fallback;
-};
-
 try {
-  const prompt = getPrompt();
+  const prompt = getPrompt(`What is the current weather in Las Vegas?`);
   console.info(`User 👤 : ${prompt}`);
 
   const response = await agent

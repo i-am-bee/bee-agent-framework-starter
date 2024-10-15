@@ -3,6 +3,7 @@
     "target": "ES2022",
     "module": "NodeNext",
     "rootDir": "src",
+    "sourceRoot": "src",
     "baseUrl": ".",
     "moduleResolution": "NodeNext",
     "incremental": false,
