@@ -37,7 +37,7 @@
     "prepare": "husky && npm run _ensure_env"
   },
   "dependencies": {
-    "bee-agent-framework": "^0.0.28",
+    "bee-agent-framework": "^0.0.29",
     "bee-observe-connector": "^0.0.3",
     "dotenv": "^16.4.5",
     "ollama": "^0.5.9",
