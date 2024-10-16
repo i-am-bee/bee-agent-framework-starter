@@ -21,6 +21,7 @@
   },
   "scripts": {
     "start": "tsx ./src/agent.ts",
+    "start:basic": "tsx ./src/agent.ts",
     "start:observe": "tsx ./src/agent_observe.ts",
     "start:code_interpreter": "tsx ./src/agent_code_interpreter.ts",
     "ts:check": "tsc --noEmit --project tsconfig.json",
