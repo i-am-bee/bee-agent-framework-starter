@@ -30,11 +30,10 @@
     "lint:fix": "eslint --fix",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
-    "infra:start": "npm run _docker -- compose --profile=${npm_config_profile:=all} up --detach --wait",
-    "infra:stop": "npm run _docker -- compose --profile=${npm_config_profile:=all} down",
+    "infra:start": "docker compose --profile=${npm_config_profile:=all} up --detach --wait",
+    "infra:stop": "docker compose --profile=${npm_config_profile:=all} down",
     "infra:remove": "npm run infra:stop -- --volumes",
     "_ensure_env": "cp -n .env.template .env || true",
-    "_docker": "npm run _ensure_env && bash -c 'source ./.env && docker_cmd=$(which docker >/dev/null 2>&1 && printf docker || printf podman) && $docker_cmd \"$@\"' sh",
     "prepare": "husky && npm run _ensure_env"
   },
   "dependencies": {
