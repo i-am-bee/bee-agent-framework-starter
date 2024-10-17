@@ -57,6 +57,7 @@ export const LLMFactories: Record<Provider, () => ChatLLM<ChatLLMOutput>> = {
     WatsonXChatLLM.fromPreset(getEnv("WATSONX_MODEL") || "meta-llama/llama-3-1-70b-instruct", {
       apiKey: getEnv("WATSONX_API_KEY"),
       projectId: getEnv("WATSONX_PROJECT_ID"),
+      region: getEnv("WATSONX_REGION"),
     }),
 };
 
