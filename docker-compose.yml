@@ -55,7 +55,7 @@ services:
     profiles:
       - all
       - observe
-    image: bitnami/mlflow:2.14.1
+    image: bitnami/mlflow:2.16.2
     ports:
       - "8080:8080"
     entrypoint:

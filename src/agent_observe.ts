@@ -6,14 +6,8 @@ import { DuckDuckGoSearchTool } from "bee-agent-framework/tools/search/duckDuckG
 import { OpenMeteoTool } from "bee-agent-framework/tools/weather/openMeteo";
 import * as process from "node:process";
 import { createObserveConnector, ObserveError } from "bee-observe-connector";
-import { beeObserveApiSetting } from "./helpers/observe.js";
-import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-import * as path from "node:path";
 import { getChatLLM } from "./helpers/llm.js";
 import { getPrompt } from "./helpers/prompt.js";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const llm = getChatLLM();
 
@@ -40,22 +34,18 @@ try {
     )
     .middleware(
       createObserveConnector({
-        api: beeObserveApiSetting,
+        api: {
+          baseUrl: "http://127.0.0.1:4002",
+          apiAuthKey: "testing-api-key",
+        },
         cb: async (err, data) => {
           if (err) {
             console.error(`Agent 🤖 : `, ObserveError.ensure(err).explain());
           } else {
-            const { id, response } = data?.result || {};
-            console.info(`Observe 🔎 : `, response?.text || "Invalid output");
-
-            // you can use `&include_mlflow_tree=true` as well to return all sent data to mlflow
+            console.info(`Observe 🔎`, data?.result?.response?.text || "Invalid result.");
             console.info(
-              `Observe 🔎 : Call the Observe API via this curl command outside of this Interactive session and see the trace data in the "trace.json" file: \n\n`,
-              `curl -s "${beeObserveApiSetting.baseUrl}/trace/${id}?include_tree=true&include_mlflow=true" \\
-\t-H "x-bee-authorization: ${beeObserveApiSetting.apiAuthKey}" \\
-\t-H "Content-Type: application/json" \\
-\t-o ${path.join(__dirname, "/../tmp/observe/trace.json")}`,
-              `\n`,
+              `Observe 🔎`,
+              `Trace has been created and will shortly be available at https://127.0.0.1:8080/#/experiments/0`,
             );
           }
         },

@@ -17,6 +17,10 @@ This starter template lets you quickly start working with the [Bee Agent Framewo
 
 > [!TIP]
 >
+> To run an agent with a custom prompt, simply do this `npm run start <<< 'Hello Bee!'
+
+> [!TIP]
+>
 > To use Bee agent with [Python Code Interpreter](https://github.com/i-am-bee/bee-code-interpreter) refer to the [Code Interpreter](#code-interpreter) section.
 
 > [!TIP]
@@ -64,4 +68,4 @@ Get complete visibility of the agent's inner workings via our observability stac
 
 > [!TIP]
 >
-> Configuration can be found [here](./infra/observe/.env.docker).
+> Configuration can be found in [infra/observe/.env.docker](./infra/observe/.env.docker).
