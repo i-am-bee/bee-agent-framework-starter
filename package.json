@@ -20,16 +20,14 @@
     "url": "https://github.com/i-am-bee/bee-agent-framework-starter/issues"
   },
   "scripts": {
-    "start": "tsx ./src/agent.ts",
-    "start:basic": "tsx ./src/agent.ts",
-    "start:observe": "tsx ./src/agent_observe.ts",
-    "start:code_interpreter": "tsx ./src/agent_code_interpreter.ts",
+    "run": "npm exec tsx",
     "ts:check": "tsc --noEmit --project tsconfig.json",
     "build": "rimraf dist && tsc",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
+    "infra:pull": "docker compose --profile=${npm_config_profile:=all} pull",
     "infra:start": "docker compose --profile=${npm_config_profile:=all} up --detach --wait",
     "infra:stop": "docker compose --profile=${npm_config_profile:=all} down",
     "infra:remove": "npm run infra:stop -- --volumes",
