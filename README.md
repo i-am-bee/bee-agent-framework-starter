@@ -13,9 +13,9 @@ This starter template lets you quickly start working with the [Bee Agent Framewo
 1. Clone this repository or [use it as a template](https://github.com/new?template_name=bee-agent-framework-starter&template_owner=i-am-bee).
 2. Install dependencies `npm ci`.
 3. Configure your project by filling in missing values in the `.env` file (default LLM provider is locally hosted `Ollama`).
-4. Run the agent `npm run src/agent.ts`
+4. Run the agent `npm run start src/agent.ts`
 
-To run an agent with a custom prompt, simply do this `npm run src/agent.ts <<< 'Hello Bee!'`
+To run an agent with a custom prompt, simply do this `npm run start src/agent.ts <<< 'Hello Bee!'`
 
 🧪 More examples can be found [here](https://github.com/i-am-bee/bee-agent-framework/blob/main/examples).
 
@@ -44,7 +44,7 @@ The [Bee Code Interpreter](https://github.com/i-am-bee/bee-code-interpreter) is 
 ### Instructions
 
 1. Start all services related to the [`Code Interpreter`](https://github.com/i-am-bee/bee-code-interpreter) `npm run infra:start --profile=code_interpreter`
-2. Run the agent `npm run src/agent_code_interpreter.ts`
+2. Run the agent `npm run start src/agent_code_interpreter.ts`
 
 > [!NOTE]
 >
@@ -61,7 +61,7 @@ Get complete visibility of the agent's inner workings via our observability stac
 ### Instructions
 
 1. Start all services related to [Bee Observe](https://github.com/i-am-bee/bee-observe) `npm run infra:start --profile=observe`
-2. Run the agent `npm run src/agent_observe.ts`
+2. Run the agent `npm run start src/agent_observe.ts`
 3. Upload the final trace to the `MLFlow` (the agent will print instructions on how to do that).
 4. See visualized trace in MLFlow web application [`http://127.0.0.1:8080/#/experiments/0`](http://localhost:8080/#/experiments/0)
    - Credentials: (user: `admin`, password: `password`)
