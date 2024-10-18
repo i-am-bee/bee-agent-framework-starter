@@ -1,14 +1,14 @@
-# Bee Agent Framework Starter
+# 🐝 Bee Agent Framework Starter
 
-This starter template allows you to easily start working with the [Bee Agent Framework](https://github.com/i-am-bee/bee-agent-framework) in a second.
+This starter template lets you quickly start working with the [Bee Agent Framework](https://github.com/i-am-bee/bee-agent-framework) in a second.
 
-## Key Features
+## ✨ Key Features
 
-- ✨ Safely execute an arbitrary Python Code via [Bee Code Interpreter](https://github.com/i-am-bee/bee-code-interpreter).
-- ✨ Get complete visibility into agents’ decisions using our MLFlow integration thanks to [Bee Observe](https://github.com/i-am-bee/bee-observe).
-- ✨ Fully fledged TypeScript project setup with linting and formatting.
+- 🔒 Safely execute an arbitrary Python Code via [Bee Code Interpreter](https://github.com/i-am-bee/bee-code-interpreter).
+- 🔎 Get complete visibility into agents' decisions using our MLFlow integration thanks to [Bee Observe](https://github.com/i-am-bee/bee-observe).
+- 🚀 Fully fledged TypeScript project setup with linting and formatting.
 
-## Requeriments
+## 📦 Requeriments
 
 You need to have installed the next tools.
 
@@ -17,45 +17,64 @@ You need to have installed the next tools.
 - Remote [watsonx](https://www.ibm.com/watsonx) or Local [ollama](https://ollama.com) LLM service
 - LLM model [Granite](https://huggingface.co/ibm-granite) or [Llama 3.x](https://huggingface.co/meta-llama)
 
-## Getting started
+## 🛠️ Getting started
 
-1. Clone the repository `git clone git@github.com:i-am-bee/bee-agent-framework-starter` or create your own repository from this one.
+1. Clone this repository or [use it as a template](https://github.com/new?template_name=bee-agent-framework-starter&template_owner=i-am-bee).
 2. Install dependencies `npm ci`.
-3. Fill missing values in `.env`.
-4. Run the agent `npm run start` (it runs the `./src/agent.ts` file).
+3. Configure your project by filling in missing values in the `.env` file (default LLM provider is locally hosted `Ollama`).
+4. Run the agent `npm run src/agent.ts`
 
-## Infrastructure
+To run an agent with a custom prompt, simply do this `npm run src/agent.ts <<< 'Hello Bee!'`
+
+🧪 More examples can be found [here](https://github.com/i-am-bee/bee-agent-framework/blob/main/examples).
+
+> [!TIP]
+>
+> To use Bee agent with [Python Code Interpreter](https://github.com/i-am-bee/bee-code-interpreter) refer to the [Code Interpreter](#code-interpreter) section.
+
+> [!TIP]
+>
+> To use Bee agent with [Bee Observe](https://github.com/i-am-bee/bee-observe) refer to the [Observability](#observability) section.
+
+## 🏗 Infrastructure
 
 > [!NOTE]
 >
-> Docker distribution with support for compose is required, the following are supported:
+> Docker distribution with support for _compose_ is required, the following are supported:
 >
 > - [Docker](https://www.docker.com/)
 > - [Rancher](https://www.rancher.com/) - macOS users may want to use VZ instead of QEMU
-> - [Podman](https://podman.io/) - requires [compose](https://podman-desktop.io/docs/compose/setting-up-compose) and **rootful machine** (if your current machine is rootless, please create a new one)
+> - [Podman](https://podman.io/) - requires [compose](https://podman-desktop.io/docs/compose/setting-up-compose) and **rootful machine** (if your current machine is rootless, please create a new one, also ensure you have enabled Docker compatibility mode).
 
-## Code interpreter
+## 🔒Code interpreter
+
+The [Bee Code Interpreter](https://github.com/i-am-bee/bee-code-interpreter) is a gRPC service that an agent uses to execute an arbitrary Python code safely.
 
 ### Instructions
 
-1. Start all services related to Code Interpreter `npm run infra:start --profile=code_interpreter`
-2. Add `CODE_INTERPRETER_URL=http://127.0.0.1:50051` to your `.env` (if `.env` does not exist, create one from `.env.template`).
-3. Run the agent `npm run start:code_interpreter` (it runs the `./src/agent_code_interpreter.ts` file)
+1. Start all services related to the [`Code Interpreter`](https://github.com/i-am-bee/bee-code-interpreter) `npm run infra:start --profile=code_interpreter`
+2. Run the agent `npm run src/agent_code_interpreter.ts`
 
-## Observability
+> [!NOTE]
+>
+> Code Interpreter runs on `http://127.0.0.1:50051`.
 
-Get full visibility of the agent's inner working via our observability stack.
+## 🔎 Observability
+
+Get complete visibility of the agent's inner workings via our observability stack.
 
 - The [MLFlow](https://mlflow.org/) is used as UI for observability.
-- The [Bee Observe](https://github.com/i-am-bee/bee-observe) is the main Open-source observability service for Bee Agent Framework.
-- The [Bee Observe Connector](https://github.com/i-am-bee/bee-observe-connector) is the observability connector for Bee Agent Framework
-
-Configuration (ENV variables) can be found [here](./infra/observe/.env.docker).
+- The [Bee Observe](https://github.com/i-am-bee/bee-observe) is the observability service (API) for gathering traces from [Bee Agent Framework](https://github.com/i-am-bee/bee-agent-framework).
+- The [Bee Observe Connector](https://github.com/i-am-bee/bee-observe-connector) is the observability connector that sends traces from [Bee Agent Framework](https://github.com/i-am-bee/bee-agent-framework) to [Bee Observe](https://github.com/i-am-bee/bee-observe).
 
 ### Instructions
 
-1. Start all services related to Observe `npm run infra:start --profile=observe`
-2. Start the agent using the observe and MLFlow `npm run start:observe` (it runs the `./src/agent_observe.ts` file).
-3. Run the `curl` command that retrieves data from Bee Observe and passes them to the `MLFlow` instance.
-4. Access MLFlow web application [`http://localhost:8080/#/experiments/`](http://localhost:8080/#/experiments/)
+1. Start all services related to [Bee Observe](https://github.com/i-am-bee/bee-observe) `npm run infra:start --profile=observe`
+2. Run the agent `npm run src/agent_observe.ts`
+3. Upload the final trace to the `MLFlow` (the agent will print instructions on how to do that).
+4. See visualized trace in MLFlow web application [`http://127.0.0.1:8080/#/experiments/0`](http://localhost:8080/#/experiments/0)
    - Credentials: (user: `admin`, password: `password`)
+
+> [!TIP]
+>
+> Configuration file is [infra/observe/.env.docker](./infra/observe/.env.docker).
