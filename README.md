@@ -8,6 +8,15 @@ This starter template lets you quickly start working with the [Bee Agent Framewo
 - 🔎 Get complete visibility into agents' decisions using our MLFlow integration thanks to [Bee Observe](https://github.com/i-am-bee/bee-observe).
 - 🚀 Fully fledged TypeScript project setup with linting and formatting.
 
+## 📦 Requeriments
+
+You need to have installed the next tools.
+
+- JavaScript runtime [nodejs > 18](https://nodejs.org/)
+- Container system typically [podman](https://podman.io/) or [docker](https://www.docker.com/)
+- Remote [watsonx](https://www.ibm.com/watsonx) or Local [ollama](https://ollama.com) LLM service
+- LLM model [Granite](https://huggingface.co/ibm-granite) or [Llama 3.x](https://huggingface.co/meta-llama)
+
 ## 🛠️ Getting started
 
 1. Clone this repository or [use it as a template](https://github.com/new?template_name=bee-agent-framework-starter&template_owner=i-am-bee).
