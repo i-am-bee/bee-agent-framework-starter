@@ -45,7 +45,7 @@ try {
             console.info(`Observe 🔎`, data?.result?.response?.text || "Invalid result.");
             console.info(
               `Observe 🔎`,
-              `Trace has been created and will shortly be available at https://127.0.0.1:8080/#/experiments/0`,
+              `Trace has been created and will shortly be available at http://127.0.0.1:8080/#/experiments/0`,
             );
           }
         },
