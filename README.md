@@ -2,6 +2,8 @@
 
 This starter template lets you quickly start working with the [Bee Agent Framework](https://github.com/i-am-bee/bee-agent-framework) in a second.
 
+📚 See the [documentation](https://i-am-bee.github.io/bee-agent-framework/) to learn more.
+
 ## ✨ Key Features
 
 - 🔒 Safely execute an arbitrary Python Code via [Bee Code Interpreter](https://github.com/i-am-bee/bee-code-interpreter).
