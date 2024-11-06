@@ -70,8 +70,7 @@ Get complete visibility of the agent's inner workings via our observability stac
 
 1. Start all services related to [Bee Observe](https://github.com/i-am-bee/bee-observe) `npm run infra:start --profile=observe`
 2. Run the agent `npm run start src/agent_observe.ts`
-3. Upload the final trace to the `MLFlow` (the agent will print instructions on how to do that).
-4. See visualized trace in MLFlow web application [`http://127.0.0.1:8080/#/experiments/0`](http://localhost:8080/#/experiments/0)
+3. See visualized trace in MLFlow web application [`http://127.0.0.1:8080/#/experiments/0`](http://localhost:8080/#/experiments/0)
    - Credentials: (user: `admin`, password: `password`)
 
 > [!TIP]
