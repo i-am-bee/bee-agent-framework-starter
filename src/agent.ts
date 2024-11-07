@@ -6,13 +6,13 @@ import { OpenMeteoTool } from "bee-agent-framework/tools/weather/openMeteo";
 import * as process from "node:process";
 import { getChatLLM } from "./helpers/llm.js";
 import { getPrompt } from "./helpers/prompt.js";
-import { DuckDuckGoSearchTool } from "bee-agent-framework/tools/search/duckDuckGoSearch";
+import { WikipediaTool } from "bee-agent-framework/tools/search/wikipedia";
 
 const llm = getChatLLM();
 const agent = new BeeAgent({
   llm,
   memory: new TokenMemory({ llm }),
-  tools: [new OpenMeteoTool(), new DuckDuckGoSearchTool({ retryOptions: { maxRetries: 5 } })],
+  tools: [new OpenMeteoTool(), new WikipediaTool()],
 });
 
 try {
