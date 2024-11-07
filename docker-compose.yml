@@ -87,7 +87,7 @@ services:
     profiles:
       - all
       - observe
-    image: iambeeagent/bee-observe:0.0.3
+    image: icr.io/i-am-bee/bee-observe:0.0.4
     ports:
       - "4002:3000"
     env_file:
