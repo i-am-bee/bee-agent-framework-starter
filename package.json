@@ -35,7 +35,7 @@
     "prepare": "husky && npm run _ensure_env"
   },
   "dependencies": {
-    "bee-agent-framework": "^0.0.37",
+    "bee-agent-framework": "^0.0.38",
     "bee-observe-connector": "^0.0.5",
     "dotenv": "^16.4.5",
     "groq-sdk": "^0.7.0",
