@@ -1,6 +1,7 @@
 {
   "name": "bee-agent-framework-starter",
   "type": "module",
+  "version": "0.0.1",
   "private": true,
   "engines": {
     "node": ">=18.0.0",
@@ -35,12 +36,13 @@
     "prepare": "husky && npm run _ensure_env"
   },
   "dependencies": {
-    "bee-agent-framework": "^0.0.39",
+    "@ibm-generative-ai/node-sdk": "^3.2.3",
+    "bee-agent-framework": "^0.0.40",
     "bee-observe-connector": "^0.0.5",
     "dotenv": "^16.4.5",
     "groq-sdk": "^0.7.0",
-    "ollama": "^0.5.9",
-    "openai": "^4.67.3",
+    "ollama": "^0.5.10",
+    "openai": "^4.72.0",
     "openai-chat-tokens": "^0.2.8",
     "pino": "^9.4.0",
     "zod": "^3.23.8"
