@@ -36,8 +36,8 @@
     "prepare": "husky && npm run _ensure_env"
   },
   "dependencies": {
-    "@ibm-generative-ai/node-sdk": "^3.2.3",
-    "bee-agent-framework": "^0.0.41",
+    "@ibm-generative-ai/node-sdk": "^3.2.4",
+    "bee-agent-framework": "^0.0.42",
     "bee-observe-connector": "^0.0.5",
     "dotenv": "^16.4.5",
     "groq-sdk": "^0.7.0",
