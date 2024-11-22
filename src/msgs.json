@@ -1,0 +1,113 @@
+{
+  "__version": "0.0.42",
+  "__root": {
+    "__serializer": true,
+    "__class": "Array",
+    "__ref": "1",
+    "__value": [
+      {
+        "__serializer": true,
+        "__class": "BaseMessage",
+        "__ref": "2",
+        "__value": {
+          "role": "system",
+          "text": "# Available functions\nYou can only use the following functions. Always use all required parameters.\n\nFunction Name: Python\nDescription: Run Python and/or shell code and return the console output. Use for isolated calculations, computations, data or file manipulation. Files provided by the user, or created in a previous run, will be accesible if and only if they are specified in the input. It is necessary to always print() results. The following shell commands are available: Use ffmpeg to convert videos. Use yt-dlp to download videos, and unless specified otherwise use `-S vcodec:h264,res,acodec:m4a` for video and `-x --audio-format mp3` for audio-only. Use pandoc to convert documents between formats (like MD, DOC, DOCX, PDF) -- and don't forget that you can create PDFs by writing markdown and then converting. In Python, the following modules are available: Use numpy, pandas, scipy and sympy for working with data. Use matplotlib to plot charts. Use pillow (import PIL) to create and manipulate images. Use moviepy for complex manipulations with videos. Use PyPDF2, pikepdf, or fitz to manipulate PDFs. Use pdf2image to convert PDF to images. Other Python libraries are also available -- however, prefer using the ones above. Prefer using qualified imports -- `import library; library.thing()` instead of `import thing from library`. Do not attempt to install libraries manually -- it will not work. Each invocation of Python runs in a completely fresh VM -- it will not remember anything from before. Do not use this tool multiple times in a row, always write the full code you want to run in a single invocation.\nParameters: {\"type\":\"object\",\"properties\":{\"language\":{\"type\":\"string\",\"enum\":[\"python\",\"shell\"],\"description\":\"Use shell for ffmpeg, pandoc, yt-dlp\"},\"code\":{\"type\":\"string\",\"description\":\"full source code file that will be executed\"},\"inputFiles\":{\"type\":\"array\",\"items\":{\"type\":\"string\",\"enum\":[\"joke.txt\"]},\"description\":\"To access an existing file, you must specify it; otherwise, the file will not be accessible. IMPORTANT: If the file is not provided in the input, it will not be accessible.\"}},\"required\":[\"language\",\"code\",\"inputFiles\"],\"additionalProperties\":false}\n\n# Communication structure\nYou communicate only in instruction lines. The format is: \"Instruction: expected output\". You must only use these instruction lines and must not enter empty lines or anything else between instruction lines.\nYou must skip the instruction lines Function Name, Function Input and Function Output if no function calling is required.\n\nMessage: User's message. You never use this instruction line.\nThought: A single-line step-by-step plan of how to answer the user's message. You can use the available functions defined above. This instruction line must be immediately followed by Function Name if one of the available functions defined above needs to be called, or by Final Answer. Do not provide the answer here.\nFunction Name: Name of the function. This instruction line must be immediately followed by Function Input.\nFunction Input: Function parameters. Empty object is a valid parameter.\nFunction Output: Output of the function in JSON format.\nThought: Continue your thinking process.\nFinal Answer: Answer the user or ask for more information or clarification. It must always be preceded by Thought.\n\n## Examples\nMessage: Can you translate \"How are you\" into French?\nThought: The user wants to translate a text into French. I can do that.\nFinal Answer: Comment vas-tu?\n\n# Instructions\nUser can only see the Final Answer, all answers must be provided there.\nYou must always use the communication structure and instructions defined above. Do not forget that Thought must be immediately followed by either Function Name or Final Answer.\nFunctions must be used to retrieve factual or historical information to answer the message.\nIf the user suggests using a function that is not available, answer that the function is not available. You can suggest alternatives if appropriate.\nWhen the message is unclear or you need more information from the user, ask in Final Answer.\n\n# Your capabilities\nPrefer to use these capabilities over functions.\n- You understand these languages: English, Spanish, French.\n- You can translate and summarize, even long documents.\n\n# Notes\n- If you don't know the answer, say that you don't know.\n- The current time and date in ISO format can be found in the last message.\n- When answering the user, use friendly formats for time and date.\n- Use markdown syntax for formatting code snippets, links, JSON, tables, images, files.\n- Sometimes, things don't go as planned. Functions may not provide useful information on the first few tries. You should always try a few different approaches before declaring the problem unsolvable.\n- When the function doesn't give you what you were asking for, you must either use another function or a different function input.\n  - When using search engines, you try different formulations of the query, possibly even in a different language.\n- You cannot do complex calculations, computations, or data manipulations without using functions.\n\n# Role\nYou are a helpful assistant.",
+          "meta": {
+            "__serializer": true,
+            "__class": "Object",
+            "__ref": "3",
+            "__value": {
+              "createdAt": {
+                "__serializer": true,
+                "__class": "Date",
+                "__ref": "4",
+                "__value": "2024-11-21T21:00:26.220Z"
+              }
+            }
+          }
+        }
+      },
+      {
+        "__serializer": true,
+        "__class": "BaseMessage",
+        "__ref": "5",
+        "__value": {
+          "role": "user",
+          "text": "Message: Write a joke to a joke.txt file.\n\nThis message was created at 2024-11-21T21:00:20.287Z",
+          "meta": {
+            "__serializer": true,
+            "__class": "Object",
+            "__ref": "6",
+            "__value": {
+              "createdAt": {
+                "__serializer": true,
+                "__class": "Date",
+                "__ref": "7",
+                "__value": "2024-11-21T21:00:20.287Z"
+              }
+            }
+          }
+        }
+      },
+      {
+        "__serializer": true,
+        "__class": "BaseMessage",
+        "__ref": "8",
+        "__value": {
+          "role": "assistant",
+          "text": "Here is your joke.txt file: [joke.txt](urn:bee:file:62c16021a7a3e97136f859c9f...",
+          "meta": {
+            "__serializer": true,
+            "__class": "Object",
+            "__ref": "9",
+            "__value": {
+              "createdAt": {
+                "__serializer": true,
+                "__class": "Date",
+                "__ref": "10",
+                "__value": "2024-11-21T21:00:26.199Z"
+              }
+            }
+          }
+        }
+      },
+      {
+        "__serializer": true,
+        "__class": "BaseMessage",
+        "__ref": "11",
+        "__value": {
+          "role": "user",
+          "text": "Message: Read 'joke.txt' file.\n\nThis message was created at 2024-11-21T21:00:26.200Z",
+          "meta": {
+            "__serializer": true,
+            "__class": "Object",
+            "__ref": "12",
+            "__value": {
+              "createdAt": {
+                "__serializer": true,
+                "__class": "Date",
+                "__ref": "13",
+                "__value": "2024-11-21T21:00:26.200Z"
+              }
+            }
+          }
+        }
+      },
+      {
+        "__serializer": true,
+        "__class": "BaseMessage",
+        "__ref": "14",
+        "__value": {
+          "role": "assistant",
+          "text": "Thought: The user wants to read the joke from the file.\nFunction Name: Python\nFunction Input: {\"language\":\"python\",\"code\":\"with open('joke.txt', 'r') as file: print(file.read())\",\"inputFiles\":[\"joke.txt\"]}\nFunction Output: The code executed successfully.\nStandard output: \n```\nWhy was the math book sad? Because it had too many problems.\n\n```\n",
+          "meta": {
+            "__serializer": true,
+            "__class": "Object",
+            "__ref": "15",
+            "__value": { "success": true }
+          }
+        }
+      }
+    ]
+  }
+}
