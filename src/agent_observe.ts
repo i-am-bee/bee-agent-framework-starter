@@ -10,11 +10,10 @@ import { getPrompt } from "./helpers/prompt.js";
 import { WikipediaTool } from "bee-agent-framework/tools/search/wikipedia";
 
 const llm = getChatLLM();
-
 const agent = new BeeAgent({
   llm,
   memory: new TokenMemory({ llm }),
-  tools: [new WikipediaTool(), new OpenMeteoTool()],
+  tools: [new OpenMeteoTool(), new WikipediaTool()],
 });
 
 try {
@@ -28,7 +27,7 @@ try {
         execution: {
           maxIterations: 8,
           maxRetriesPerStep: 3,
-          totalMaxRetries: 10,
+          totalMaxRetries: 0,
         },
       },
     )
