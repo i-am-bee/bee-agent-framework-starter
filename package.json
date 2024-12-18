@@ -36,8 +36,9 @@
     "prepare": "husky && npm run _ensure_env"
   },
   "dependencies": {
-    "@ibm-generative-ai/node-sdk": "^3.2.4",
     "@google-cloud/vertexai": "^1.9.2",
+    "@ibm-generative-ai/node-sdk": "^3.2.4",
+    "@opentelemetry/sdk-node": "^0.57.0",
     "bee-agent-framework": "^0.0.54",
     "bee-observe-connector": "^0.0.6",
     "dotenv": "^16.4.5",

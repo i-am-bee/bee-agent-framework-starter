@@ -67,12 +67,12 @@ services:
     profiles:
       - all
       - observe
-    image: icr.io/i-am-bee/bee-observe:0.0.4
+    image: icr.io/i-am-bee/bee-observe:0.0.5
     ports:
       - "4002:3000"
     command: >
       /bin/sh -c "
-        npx mikro-orm --config dist/mikro-orm.config.js migration:up &&
+        touch tsconfig.json && npx mikro-orm --config dist/mikro-orm.config.js migration:up &&
         node ./dist/index.js
       "
     env_file:
