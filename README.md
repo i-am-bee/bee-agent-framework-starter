@@ -56,7 +56,7 @@ The [Bee Code Interpreter](https://github.com/i-am-bee/bee-code-interpreter) is 
 
 > [!NOTE]
 >
-> Code Interpreter runs on `http://127.0.0.1:50051`.
+> Code Interpreter runs on `http://127.0.0.1:50081`.
 
 ## 🔎 Observability
 
