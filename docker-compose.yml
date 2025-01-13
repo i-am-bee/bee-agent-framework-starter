@@ -20,7 +20,7 @@ services:
       - ${CODE_INTEPRETER_TMPDIR:-./tmp/code_interpreter_target}:/storage
       - ./infra/bee-code-interpreter.yaml:/var/lib/rancher/k3s/server/manifests/bee-code-interpreter.yaml
     ports:
-      - "50051:30051"
+      - "50081:30051"
     healthcheck:
       test: "kubectl get pod code-interpreter | grep Running"
       interval: 10s

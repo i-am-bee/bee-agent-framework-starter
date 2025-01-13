@@ -2,8 +2,6 @@ import { ChatLLM, ChatLLMOutput } from "bee-agent-framework/llms/chat";
 import { getEnv, parseEnv } from "bee-agent-framework/internals/env";
 import { z } from "zod";
 import { WatsonXChatLLM } from "bee-agent-framework/adapters/watsonx/chat";
-import { BAMChatLLM } from "bee-agent-framework/adapters/bam/chat";
-import { Client as BAMSDK } from "@ibm-generative-ai/node-sdk";
 import { OpenAIChatLLM } from "bee-agent-framework/adapters/openai/chat";
 import { OllamaChatLLM } from "bee-agent-framework/adapters/ollama/chat";
 import { GroqChatLLM } from "bee-agent-framework/adapters/groq/chat";
@@ -12,7 +10,6 @@ import { Ollama } from "ollama";
 import Groq from "groq-sdk";
 
 export const Providers = {
-  BAM: "bam",
   WATSONX: "watsonx",
   OLLAMA: "ollama",
   OPENAI: "openai",
@@ -23,12 +20,6 @@ export const Providers = {
 type Provider = (typeof Providers)[keyof typeof Providers];
 
 export const LLMFactories: Record<Provider, () => ChatLLM<ChatLLMOutput>> = {
-  [Providers.BAM]: () =>
-    BAMChatLLM.fromPreset(getEnv("GENAI_MODEL") || "meta-llama/llama-3-1-70b-instruct", {
-      client: new BAMSDK({
-        apiKey: getEnv("GENAI_API_KEY"),
-      }),
-    }),
   [Providers.GROQ]: () =>
     new GroqChatLLM({
       modelId: getEnv("GROQ_MODEL") || "llama-3.1-70b-versatile",
