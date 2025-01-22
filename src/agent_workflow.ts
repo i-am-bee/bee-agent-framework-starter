@@ -8,8 +8,8 @@ import { BaseMessage } from "bee-agent-framework/llms/primitives/message";
 import { JsonDriver } from "bee-agent-framework/llms/drivers/json";
 import { isEmpty, pick } from "remeda";
 import { LLMTool } from "bee-agent-framework/tools/llm";
-import { GroqChatLLM } from "bee-agent-framework/adapters/groq/chat";
 import { DuckDuckGoSearchTool } from "bee-agent-framework/tools/search/duckDuckGoSearch";
+import { getChatLLM } from "src/helpers/llm.js";
 
 const schema = z.object({
   input: z.string(),
@@ -26,17 +26,19 @@ const workflow = new Workflow({
   outputSchema: schema.required({ output: true }),
 })
   .addStep("preprocess", async (state) => {
-    const llm = new GroqChatLLM();
+    const llm = getChatLLM();
     const driver = new JsonDriver(llm);
 
     const { parsed } = await driver.generate(
-      schema.pick({ topic: true, notes: true }).or(
-        z.object({
+      z
+        .object({
           error: z
             .string()
-            .describe("Use when the input query does not make sense or you need clarification."),
-        }),
-      ),
+            .describe(
+              "Use this field only if the user message is not a valid topic and is not a note to an existing blog post.",
+            ),
+        })
+        .or(schema.pick({ topic: true, notes: true })),
       [
         BaseMessage.of({
           role: `user`,
@@ -60,7 +62,7 @@ const workflow = new Workflow({
       : { update: pick(parsed, ["notes", "topic"]) };
   })
   .addStrictStep("planner", schema.required({ topic: true }), async (state) => {
-    const llm = new GroqChatLLM();
+    const llm = getChatLLM();
     const agent = new BeeAgent({
       llm,
       memory: new UnconstrainedMemory(),
@@ -89,7 +91,7 @@ const workflow = new Workflow({
     };
   })
   .addStrictStep("writer", schema.required({ plan: true }), async (state) => {
-    const llm = new GroqChatLLM();
+    const llm = getChatLLM();
     const output = await llm.generate([
       BaseMessage.of({
         role: `system`,
@@ -117,7 +119,7 @@ const workflow = new Workflow({
     };
   })
   .addStrictStep("editor", schema.required({ draft: true }), async (state) => {
-    const llm = new GroqChatLLM();
+    const llm = getChatLLM();
     const output = await llm.generate([
       BaseMessage.of({
         role: `system`,
