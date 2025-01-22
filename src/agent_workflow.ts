@@ -1,81 +1,168 @@
 import "dotenv/config";
-import { BeeAgent } from "bee-agent-framework/agents/bee/agent";
 import { z } from "zod";
-import { BaseMessage, Role } from "bee-agent-framework/llms/primitives/message";
-import { JsonDriver } from "bee-agent-framework/llms/drivers/json";
-import { WikipediaTool } from "bee-agent-framework/tools/search/wikipedia";
-import { OpenMeteoTool } from "bee-agent-framework/tools/weather/openMeteo";
-import { ReadOnlyMemory } from "bee-agent-framework/memory/base";
-import { UnconstrainedMemory } from "bee-agent-framework/memory/unconstrainedMemory";
 import { Workflow } from "bee-agent-framework/experimental/workflows/workflow";
+import { BeeAgent } from "bee-agent-framework/agents/bee/agent";
+import { UnconstrainedMemory } from "bee-agent-framework/memory/unconstrainedMemory";
+import { createConsoleReader } from "./helpers/reader.js";
+import { BaseMessage } from "bee-agent-framework/llms/primitives/message";
+import { JsonDriver } from "bee-agent-framework/llms/drivers/json";
+import { isEmpty, pick } from "remeda";
+import { LLMTool } from "bee-agent-framework/tools/llm";
 import { GroqChatLLM } from "bee-agent-framework/adapters/groq/chat";
-import { getPrompt } from "src/helpers/prompt.js";
+import { DuckDuckGoSearchTool } from "bee-agent-framework/tools/search/duckDuckGoSearch";
 
 const schema = z.object({
-  answer: z.instanceof(BaseMessage).optional(),
-  memory: z.instanceof(ReadOnlyMemory),
+  input: z.string(),
+  output: z.string().optional(),
+
+  topic: z.string().optional(),
+  notes: z.array(z.string()).default([]),
+  plan: z.string().optional(),
+  draft: z.string().optional(),
 });
 
-const workflow = new Workflow({ schema: schema })
-  .addStep("simpleAgent", async (state) => {
-    const simpleAgent = new BeeAgent({
-      llm: new GroqChatLLM(),
-      tools: [],
-      memory: state.memory,
-    });
-    const answer = await simpleAgent.run({ prompt: null });
-    console.log("🤖 Simple Agent", answer.result.text);
-
-    return {
-      update: { answer: answer.result },
-      next: "critique",
-    };
-  })
-  .addStrictStep("critique", schema.required(), async (state) => {
+const workflow = new Workflow({
+  schema,
+  outputSchema: schema.required({ output: true }),
+})
+  .addStep("preprocess", async (state) => {
     const llm = new GroqChatLLM();
-    const { parsed: critiqueResponse } = await new JsonDriver(llm).generate(
-      z.object({ score: z.number().int().min(0).max(100) }),
+    const driver = new JsonDriver(llm);
+
+    const { parsed } = await driver.generate(
+      schema.pick({ topic: true, notes: true }).or(
+        z.object({
+          error: z
+            .string()
+            .describe("Use when the input query does not make sense or you need clarification."),
+        }),
+      ),
       [
         BaseMessage.of({
-          role: "system",
-          text: `You are an evaluation assistant who scores the credibility of the last assistant's response. Chitchatting always has a score of 100. If the assistant was unable to answer the user's query, then the score will be 0.`,
+          role: `user`,
+          text: [
+            "Your task is to rewrite the user query so that it guides the content planner and editor to craft a blog post that perfectly aligns with the user's needs. Notes should be used only if the user complains about something.",
+            "If the user query does ",
+            "",
+            ...[state.topic && ["# Previous Topic", state.topic, ""]],
+            ...[!isEmpty(state.notes) && ["# Previous Notes", ...state.notes, ""]],
+            "# User Query",
+            state.input || "empty",
+          ]
+            .filter(Boolean)
+            .join("\n"),
         }),
-        ...state.memory.messages,
-        state.answer,
       ],
     );
-    console.log("🧠 Score", critiqueResponse.score.toString());
+
+    return "error" in parsed
+      ? { update: { output: parsed.error }, next: Workflow.END }
+      : { update: pick(parsed, ["notes", "topic"]) };
+  })
+  .addStrictStep("planner", schema.required({ topic: true }), async (state) => {
+    const llm = new GroqChatLLM();
+    const agent = new BeeAgent({
+      llm,
+      memory: new UnconstrainedMemory(),
+      tools: [new DuckDuckGoSearchTool(), new LLMTool({ llm })],
+    });
+
+    const { result } = await agent.run({
+      prompt: [
+        `You are a Content Planner. Your task is to write a content plan for "${state.topic}" topic in Markdown format.`,
+        ``,
+        `# Objectives`,
+        `1. Prioritize the latest trends, key players, and noteworthy news.`,
+        `2. Identify the target audience, considering their interests and pain points.`,
+        `3. Develop a detailed content outline including introduction, key points, and a call to action.`,
+        `4. Include SEO keywords and relevant sources.`,
+        ``,
+        ...[!isEmpty(state.notes) && ["# Notes", ...state.notes, ""]],
+        `Provide a structured output that covers the mentioned sections.`,
+      ].join("\n"),
+    });
 
     return {
-      next: critiqueResponse.score < 75 ? "complexAgent" : Workflow.END,
+      update: {
+        plan: result.text,
+      },
     };
   })
-  .addStep("complexAgent", async (state) => {
-    const complexAgent = new BeeAgent({
-      llm: new GroqChatLLM(),
-      tools: [new WikipediaTool(), new OpenMeteoTool()],
-      memory: state.memory,
-    });
-    const { result } = await complexAgent.run({ prompt: null });
-    console.log("🤖 Complex Agent:", result.text);
-    return { update: { answer: result } };
+  .addStrictStep("writer", schema.required({ plan: true }), async (state) => {
+    const llm = new GroqChatLLM();
+    const output = await llm.generate([
+      BaseMessage.of({
+        role: `system`,
+        text: [
+          `You are a Content Writer. Your task is to write a compelling blog post based on the provided context.`,
+          ``,
+          `# Context`,
+          `${state.plan}`,
+          ``,
+          `# Objectives`,
+          `- An engaging introduction`,
+          `- Insightful body paragraphs (2-3 per section)`,
+          `- Properly named sections/subtitles`,
+          `- A summarizing conclusion`,
+          `- Format: Markdown`,
+          ``,
+          ...[!isEmpty(state.notes) && ["# Notes", ...state.notes, ""]],
+          `Ensure the content flows naturally, incorporates SEO keywords, and is well-structured.`,
+        ].join("\n"),
+      }),
+    ]);
+
+    return {
+      update: { draft: output.getTextContent() },
+    };
   })
-  .setStart("simpleAgent");
+  .addStrictStep("editor", schema.required({ draft: true }), async (state) => {
+    const llm = new GroqChatLLM();
+    const output = await llm.generate([
+      BaseMessage.of({
+        role: `system`,
+        text: [
+          `You are an Editor. Your task is to transform the following draft blog post to a final version.`,
+          ``,
+          `# Draft`,
+          `${state.draft}`,
+          ``,
+          `# Objectives`,
+          `- Fix Grammatical errors`,
+          `- Journalistic best practices`,
+          ``,
+          ...[!isEmpty(state.notes) && ["# Notes", ...state.notes, ""]],
+          ``,
+          `IMPORTANT: The final version must not contain any editor's comments.`,
+        ].join("\n"),
+      }),
+    ]);
 
-const prompt = getPrompt("Write a short blog about AI Agents.");
-console.log("👤 User:", prompt);
+    return {
+      update: { output: output.getTextContent() },
+    };
+  });
 
-const memory = new UnconstrainedMemory();
-const userMessage = BaseMessage.of({
-  role: Role.USER,
-  text: prompt,
-  meta: { createdAt: new Date() },
-});
-await memory.add(userMessage);
+let lastResult = {} as Workflow.output<typeof workflow>;
+const reader = createConsoleReader();
+reader.write(
+  "ℹ️ ",
+  "I am a content creator agent. Please give me a topic for which I will write a blog post..",
+);
 
-const response = await workflow.run({
-  memory: memory.asReadOnly(),
-});
-await memory.add(response.state.answer!);
+for await (const { prompt } of reader) {
+  const { result } = await workflow
+    .run({
+      input: prompt,
+      notes: lastResult?.notes,
+      topic: lastResult?.topic,
+    })
+    .observe((emitter) => {
+      emitter.on("start", ({ step, run }) => {
+        reader.write(`-> ▶️ ${step}`, JSON.stringify(run.state));
+      });
+    });
 
-console.log("🤖 Final Answer:", response.state.answer!.text);
+  lastResult = result;
+  reader.write("🤖 Answer", lastResult.output);
+}
