@@ -40,8 +40,6 @@ export const LLMFactories: Record<Provider, () => ChatLLM<ChatLLMOutput>> = {
       modelId: getEnv("OLLAMA_MODEL") || "llama3.1:8b",
       parameters: {
         temperature: 0,
-        repeat_penalty: 1,
-        num_predict: 2000,
       },
       client: new Ollama({
         host: getEnv("OLLAMA_HOST"),

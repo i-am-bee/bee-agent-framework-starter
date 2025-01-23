@@ -9,7 +9,7 @@ import { UnconstrainedMemory } from "bee-agent-framework/memory/unconstrainedMem
 import { LocalPythonStorage } from "bee-agent-framework/tools/python/storage";
 import { CustomTool } from "bee-agent-framework/tools/custom";
 import { getChatLLM } from "./helpers/llm.js";
-import { getPrompt } from "./helpers/prompt.js";
+import { createConsoleReader } from "./helpers/reader.js";
 
 const codeInterpreterUrl = process.env.CODE_INTERPRETER_URL;
 if (!codeInterpreterUrl) {
@@ -59,27 +59,28 @@ def get_riddle() -> dict[str, str] | None:
   ],
 });
 
-try {
-  const prompt = getPrompt(`Generate a random riddle.`);
-  console.info(`User 👤 : ${prompt}`);
-
-  const response = await agent
-    .run(
-      { prompt },
-      {
-        execution: {
-          maxIterations: 8,
-          maxRetriesPerStep: 3,
-          totalMaxRetries: 10,
+const reader = createConsoleReader({ fallback: "Generate a random riddle." });
+for await (const { prompt } of reader) {
+  try {
+    const response = await agent
+      .run(
+        { prompt },
+        {
+          execution: {
+            maxIterations: 8,
+            maxRetriesPerStep: 3,
+            totalMaxRetries: 10,
+          },
         },
-      },
-    )
-    .observe((emitter) => {
-      emitter.on("update", (data) => {
-        console.info(`Agent 🤖 (${data.update.key}) : ${data.update.value}`);
+      )
+      .observe((emitter) => {
+        emitter.on("update", (data) => {
+          reader.write(`Agent 🤖 (${data.update.key}) : `, data.update.value);
+        });
       });
-    });
-  console.info(`Agent 🤖 : ${response.result.text}`);
-} catch (error) {
-  console.error(FrameworkError.ensure(error).dump());
+
+    reader.write(`Agent 🤖 : `, response.result.text);
+  } catch (error) {
+    reader.write(`Error`, FrameworkError.ensure(error).dump());
+  }
 }

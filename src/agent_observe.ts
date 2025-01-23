@@ -5,8 +5,8 @@ import { FrameworkError } from "bee-agent-framework/errors";
 import { TokenMemory } from "bee-agent-framework/memory/tokenMemory";
 import { OpenMeteoTool } from "bee-agent-framework/tools/weather/openMeteo";
 import { getChatLLM } from "./helpers/llm.js";
-import { getPrompt } from "./helpers/prompt.js";
 import { WikipediaTool } from "bee-agent-framework/tools/search/wikipedia";
+import { createConsoleReader } from "./helpers/reader.js";
 
 const llm = getChatLLM();
 const agent = new BeeAgent({
@@ -15,22 +15,22 @@ const agent = new BeeAgent({
   tools: [new OpenMeteoTool(), new WikipediaTool()],
 });
 
-try {
-  const prompt = getPrompt(`What is the current weather in Las Vegas?`);
-  console.info(`User 👤 : ${prompt}`);
-
-  const response = await agent.run(
-    { prompt },
-    {
-      execution: {
-        maxIterations: 8,
-        maxRetriesPerStep: 3,
-        totalMaxRetries: 10,
+const reader = createConsoleReader({ fallback: `What is the current weather in Las Vegas?` });
+for await (const { prompt } of reader) {
+  try {
+    const response = await agent.run(
+      { prompt },
+      {
+        execution: {
+          maxIterations: 8,
+          maxRetriesPerStep: 3,
+          totalMaxRetries: 10,
+        },
       },
-    },
-  );
+    );
 
-  console.info(`Agent 🤖 : ${response.result.text}`);
-} catch (error) {
-  console.error(FrameworkError.ensure(error).dump());
+    reader.write(`Agent 🤖 : `, response.result.text);
+  } catch (error) {
+    reader.write(`Error`, FrameworkError.ensure(error).dump());
+  }
 }
