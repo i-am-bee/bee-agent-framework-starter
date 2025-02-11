@@ -36,9 +36,8 @@
     "prepare": "husky && npm run _ensure_env"
   },
   "dependencies": {
-    "@ibm-generative-ai/node-sdk": "^3.2.4",
     "@opentelemetry/sdk-node": "^0.57.0",
-    "bee-agent-framework": "^0.1.0",
+    "bee-agent-framework": "^0.1.1",
     "dotenv": "^16.4.5",
     "pino": "^9.4.0",
     "zod": "^3.23.8"
