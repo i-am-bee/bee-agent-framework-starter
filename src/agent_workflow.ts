@@ -1,15 +1,15 @@
 import "dotenv/config";
 import { z } from "zod";
-import { Workflow } from "bee-agent-framework/experimental/workflows/workflow";
 import { BeeAgent } from "bee-agent-framework/agents/bee/agent";
 import { UnconstrainedMemory } from "bee-agent-framework/memory/unconstrainedMemory";
 import { createConsoleReader } from "./helpers/reader.js";
-import { BaseMessage } from "bee-agent-framework/llms/primitives/message";
-import { JsonDriver } from "bee-agent-framework/llms/drivers/json";
-import { isEmpty, pick } from "remeda";
+import { isEmpty } from "remeda";
 import { LLMTool } from "bee-agent-framework/tools/llm";
 import { DuckDuckGoSearchTool } from "bee-agent-framework/tools/search/duckDuckGoSearch";
-import { getChatLLM } from "src/helpers/llm.js";
+import { Workflow } from "bee-agent-framework/workflows/workflow";
+import { ChatModel } from "bee-agent-framework/backend/chat";
+import process from "node:process";
+import { SystemMessage, UserMessage } from "bee-agent-framework/backend/message";
 
 const schema = z.object({
   input: z.string(),
@@ -26,23 +26,11 @@ const workflow = new Workflow({
   outputSchema: schema.required({ output: true }),
 })
   .addStep("preprocess", async (state) => {
-    const llm = getChatLLM();
-    const driver = new JsonDriver(llm);
-
-    const { parsed } = await driver.generate(
-      z
-        .object({
-          error: z
-            .string()
-            .describe(
-              "Use this field only if the user message is not a valid topic and is not a note to an existing blog post.",
-            ),
-        })
-        .or(schema.pick({ topic: true, notes: true })),
-      [
-        BaseMessage.of({
-          role: `user`,
-          text: [
+    const model = await ChatModel.fromName(process.env.LLM_CHAT_MODEL_NAME as any);
+    const { object } = await model.createStructure({
+      messages: [
+        new UserMessage(
+          [
             "Your task is to rewrite the user query so that it guides the content planner and editor to craft a blog post that perfectly aligns with the user's needs. Notes should be used only if the user complains about something.",
             "If the user query does ",
             "",
@@ -53,16 +41,29 @@ const workflow = new Workflow({
           ]
             .filter(Boolean)
             .join("\n"),
-        }),
+        ),
       ],
-    );
+      schema: z
+        .object({
+          error: z
+            .string()
+            .describe(
+              "Use this field only if the user message is not a valid topic and is not a note to an existing blog post.",
+            ),
+        })
+        .or(schema.pick({ topic: true, notes: true })),
+    });
 
-    return "error" in parsed
-      ? { update: { output: parsed.error }, next: Workflow.END }
-      : { update: pick(parsed, ["notes", "topic"]) };
+    if ("error" in object) {
+      state.output = object.error;
+      return Workflow.END;
+    }
+
+    state.notes = object.notes ?? [];
+    state.topic = object.topic;
   })
   .addStrictStep("planner", schema.required({ topic: true }), async (state) => {
-    const llm = getChatLLM();
+    const llm = await ChatModel.fromName(process.env.LLM_CHAT_MODEL_NAME as any);
     const agent = new BeeAgent({
       llm,
       memory: new UnconstrainedMemory(),
@@ -84,65 +85,59 @@ const workflow = new Workflow({
       ].join("\n"),
     });
 
-    return {
-      update: {
-        plan: result.text,
-      },
-    };
+    state.plan = result.text;
   })
   .addStrictStep("writer", schema.required({ plan: true }), async (state) => {
-    const llm = getChatLLM();
-    const output = await llm.generate([
-      BaseMessage.of({
-        role: `system`,
-        text: [
-          `You are a Content Writer. Your task is to write a compelling blog post based on the provided context.`,
-          ``,
-          `# Context`,
-          `${state.plan}`,
-          ``,
-          `# Objectives`,
-          `- An engaging introduction`,
-          `- Insightful body paragraphs (2-3 per section)`,
-          `- Properly named sections/subtitles`,
-          `- A summarizing conclusion`,
-          `- Format: Markdown`,
-          ``,
-          ...[!isEmpty(state.notes) && ["# Notes", ...state.notes, ""]],
-          `Ensure the content flows naturally, incorporates SEO keywords, and is well-structured.`,
-        ].join("\n"),
-      }),
-    ]);
+    const model = await ChatModel.fromName(process.env.LLM_CHAT_MODEL_NAME as any);
+    const output = await model.create({
+      messages: [
+        new SystemMessage(
+          [
+            `You are a Content Writer. Your task is to write a compelling blog post based on the provided context.`,
+            ``,
+            `# Context`,
+            `${state.plan}`,
+            ``,
+            `# Objectives`,
+            `- An engaging introduction`,
+            `- Insightful body paragraphs (2-3 per section)`,
+            `- Properly named sections/subtitles`,
+            `- A summarizing conclusion`,
+            `- Format: Markdown`,
+            ``,
+            ...[!isEmpty(state.notes) && ["# Notes", ...state.notes, ""]],
+            `Ensure the content flows naturally, incorporates SEO keywords, and is well-structured.`,
+          ].join("\n"),
+        ),
+      ],
+    });
 
-    return {
-      update: { draft: output.getTextContent() },
-    };
+    state.draft = output.getTextContent();
   })
   .addStrictStep("editor", schema.required({ draft: true }), async (state) => {
-    const llm = getChatLLM();
-    const output = await llm.generate([
-      BaseMessage.of({
-        role: `system`,
-        text: [
-          `You are an Editor. Your task is to transform the following draft blog post to a final version.`,
-          ``,
-          `# Draft`,
-          `${state.draft}`,
-          ``,
-          `# Objectives`,
-          `- Fix Grammatical errors`,
-          `- Journalistic best practices`,
-          ``,
-          ...[!isEmpty(state.notes) && ["# Notes", ...state.notes, ""]],
-          ``,
-          `IMPORTANT: The final version must not contain any editor's comments.`,
-        ].join("\n"),
-      }),
-    ]);
+    const model = await ChatModel.fromName(process.env.LLM_CHAT_MODEL_NAME as any);
+    const output = await model.create({
+      messages: [
+        new SystemMessage(
+          [
+            `You are an Editor. Your task is to transform the following draft blog post to a final version.`,
+            ``,
+            `# Draft`,
+            `${state.draft}`,
+            ``,
+            `# Objectives`,
+            `- Fix Grammatical errors`,
+            `- Journalistic best practices`,
+            ``,
+            ...[!isEmpty(state.notes) && ["# Notes", ...state.notes, ""]],
+            ``,
+            `IMPORTANT: The final version must not contain any editor's comments.`,
+          ].join("\n"),
+        ),
+      ],
+    });
 
-    return {
-      update: { output: output.getTextContent() },
-    };
+    state.output = output.getTextContent();
   });
 
 let lastResult = {} as Workflow.output<typeof workflow>;

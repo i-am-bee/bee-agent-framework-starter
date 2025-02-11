@@ -8,8 +8,8 @@ import { fileURLToPath } from "node:url";
 import { UnconstrainedMemory } from "bee-agent-framework/memory/unconstrainedMemory";
 import { LocalPythonStorage } from "bee-agent-framework/tools/python/storage";
 import { CustomTool } from "bee-agent-framework/tools/custom";
-import { getChatLLM } from "./helpers/llm.js";
 import { createConsoleReader } from "./helpers/reader.js";
+import { ChatModel } from "bee-agent-framework/backend/chat";
 
 const codeInterpreterUrl = process.env.CODE_INTERPRETER_URL;
 if (!codeInterpreterUrl) {
@@ -19,7 +19,7 @@ if (!codeInterpreterUrl) {
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const agent = new BeeAgent({
-  llm: getChatLLM(),
+  llm: await ChatModel.fromName(process.env.LLM_CHAT_MODEL_NAME as any),
   memory: new UnconstrainedMemory(),
   tools: [
     new PythonTool({

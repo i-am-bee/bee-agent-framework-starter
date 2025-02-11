@@ -4,14 +4,14 @@ import { BeeAgent } from "bee-agent-framework/agents/bee/agent";
 import { FrameworkError } from "bee-agent-framework/errors";
 import { TokenMemory } from "bee-agent-framework/memory/tokenMemory";
 import { OpenMeteoTool } from "bee-agent-framework/tools/weather/openMeteo";
-import { getChatLLM } from "./helpers/llm.js";
 import { WikipediaTool } from "bee-agent-framework/tools/search/wikipedia";
 import { createConsoleReader } from "./helpers/reader.js";
+import { ChatModel } from "bee-agent-framework/backend/chat";
+import process from "node:process";
 
-const llm = getChatLLM();
 const agent = new BeeAgent({
-  llm,
-  memory: new TokenMemory({ llm }),
+  llm: await ChatModel.fromName(process.env.LLM_CHAT_MODEL_NAME as any),
+  memory: new TokenMemory(),
   tools: [new OpenMeteoTool(), new WikipediaTool()],
 });
 
