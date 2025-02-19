@@ -1,8 +1,8 @@
-# 🐝 Bee Agent Framework Starter
+# 🐝 BeeAI Framework Starter
 
-This starter template lets you quickly start working with the [Bee Agent Framework](https://github.com/i-am-bee/bee-agent-framework) in a second.
+This starter template lets you quickly start working with the [BeeAI Framework](https://github.com/i-am-bee/beeai-framework) in a second.
 
-📚 See the [documentation](https://i-am-bee.github.io/bee-agent-framework/) to learn more.
+📚 See the [documentation](https://i-am-bee.github.io/beeai-framework/) to learn more.
 
 ## ✨ Key Features
 
@@ -18,14 +18,14 @@ This starter template lets you quickly start working with the [Bee Agent Framewo
 
 ## 🛠️ Getting started
 
-1. Clone this repository or [use it as a template](https://github.com/new?template_name=bee-agent-framework-starter&template_owner=i-am-bee).
+1. Clone this repository or [use it as a template](https://github.com/new?template_name=beeai-framework-starter&template_owner=i-am-bee).
 2. Install dependencies `npm ci`.
 3. Configure your project by filling in missing values in the `.env` file (default LLM provider is locally hosted `Ollama`).
 4. Run the agent `npm run start src/agent.ts`
 
 To run an agent with a custom prompt, simply do this `npm run start src/agent.ts <<< 'Hello Bee!'`
 
-🧪 More examples can be found [here](https://github.com/i-am-bee/bee-agent-framework/blob/main/examples).
+🧪 More examples can be found [here](https://github.com/i-am-bee/beeai-framework/blob/main/examples).
 
 > [!TIP]
 >
@@ -63,8 +63,7 @@ The [Bee Code Interpreter](https://github.com/i-am-bee/bee-code-interpreter) is 
 Get complete visibility of the agent's inner workings via our observability stack.
 
 - The [MLFlow](https://mlflow.org/) is used as UI for observability.
-- The [Bee Observe](https://github.com/i-am-bee/bee-observe) is the observability service (API) for gathering traces from [Bee Agent Framework](https://github.com/i-am-bee/bee-agent-framework).
-- The [Bee Observe Connector](https://github.com/i-am-bee/bee-observe-connector) is the observability connector that sends traces from [Bee Agent Framework](https://github.com/i-am-bee/bee-agent-framework) to [Bee Observe](https://github.com/i-am-bee/bee-observe).
+- The [Bee Observe](https://github.com/i-am-bee/bee-observe) is the observability service (API) for gathering traces from [Bee Agent Framework](https://github.com/i-am-bee/beeai-framework).
 
 ### Instructions
 

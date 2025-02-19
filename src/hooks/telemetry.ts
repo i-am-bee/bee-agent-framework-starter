@@ -17,7 +17,7 @@
 import "dotenv/config";
 import "@opentelemetry/instrumentation/hook.mjs";
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
-import { Version } from "bee-agent-framework";
+import { Version } from "beeai-framework";
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
 import { Resource } from "@opentelemetry/resources";
@@ -28,7 +28,7 @@ const traceExporter = new OTLPTraceExporter({
 
 const sdk = new NodeSDK({
   resource: new Resource({
-    [ATTR_SERVICE_NAME]: "bee-agent-framework-starter",
+    [ATTR_SERVICE_NAME]: "beeai-framework-starter",
     [ATTR_SERVICE_VERSION]: Version,
   }),
   traceExporter,

@@ -1,15 +1,15 @@
 import "dotenv/config.js";
-import { BeeAgent } from "bee-agent-framework/agents/bee/agent";
-import { FrameworkError } from "bee-agent-framework/errors";
+import { BeeAgent } from "beeai-framework/agents/bee/agent";
+import { FrameworkError } from "beeai-framework/errors";
 import * as process from "node:process";
-import { PythonTool } from "bee-agent-framework/tools/python/python";
+import { PythonTool } from "beeai-framework/tools/python/python";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { UnconstrainedMemory } from "bee-agent-framework/memory/unconstrainedMemory";
-import { LocalPythonStorage } from "bee-agent-framework/tools/python/storage";
-import { CustomTool } from "bee-agent-framework/tools/custom";
+import { UnconstrainedMemory } from "beeai-framework/memory/unconstrainedMemory";
+import { LocalPythonStorage } from "beeai-framework/tools/python/storage";
+import { CustomTool } from "beeai-framework/tools/custom";
 import { createConsoleReader } from "./helpers/reader.js";
-import { ChatModel } from "bee-agent-framework/backend/chat";
+import { ChatModel } from "beeai-framework/backend/chat";
 
 const codeInterpreterUrl = process.env.CODE_INTERPRETER_URL;
 if (!codeInterpreterUrl) {

@@ -1,15 +1,15 @@
 import "dotenv/config";
 import { z } from "zod";
-import { BeeAgent } from "bee-agent-framework/agents/bee/agent";
-import { UnconstrainedMemory } from "bee-agent-framework/memory/unconstrainedMemory";
+import { BeeAgent } from "beeai-framework/agents/bee/agent";
+import { UnconstrainedMemory } from "beeai-framework/memory/unconstrainedMemory";
 import { createConsoleReader } from "./helpers/reader.js";
 import { isEmpty } from "remeda";
-import { LLMTool } from "bee-agent-framework/tools/llm";
-import { DuckDuckGoSearchTool } from "bee-agent-framework/tools/search/duckDuckGoSearch";
-import { Workflow } from "bee-agent-framework/workflows/workflow";
-import { ChatModel } from "bee-agent-framework/backend/chat";
+import { LLMTool } from "beeai-framework/tools/llm";
+import { DuckDuckGoSearchTool } from "beeai-framework/tools/search/duckDuckGoSearch";
+import { Workflow } from "beeai-framework/workflows/workflow";
+import { ChatModel } from "beeai-framework/backend/chat";
 import process from "node:process";
-import { SystemMessage, UserMessage } from "bee-agent-framework/backend/message";
+import { SystemMessage, UserMessage } from "beeai-framework/backend/message";
 
 const schema = z.object({
   input: z.string(),

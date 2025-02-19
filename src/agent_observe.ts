@@ -1,12 +1,12 @@
 import "./hooks/telemetry.js";
 import "dotenv/config.js";
-import { BeeAgent } from "bee-agent-framework/agents/bee/agent";
-import { FrameworkError } from "bee-agent-framework/errors";
-import { TokenMemory } from "bee-agent-framework/memory/tokenMemory";
-import { OpenMeteoTool } from "bee-agent-framework/tools/weather/openMeteo";
-import { WikipediaTool } from "bee-agent-framework/tools/search/wikipedia";
+import { BeeAgent } from "beeai-framework/agents/bee/agent";
+import { FrameworkError } from "beeai-framework/errors";
+import { TokenMemory } from "beeai-framework/memory/tokenMemory";
+import { OpenMeteoTool } from "beeai-framework/tools/weather/openMeteo";
+import { WikipediaTool } from "beeai-framework/tools/search/wikipedia";
 import { createConsoleReader } from "./helpers/reader.js";
-import { ChatModel } from "bee-agent-framework/backend/chat";
+import { ChatModel } from "beeai-framework/backend/chat";
 import process from "node:process";
 
 const agent = new BeeAgent({

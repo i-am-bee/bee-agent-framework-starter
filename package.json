@@ -1,5 +1,5 @@
 {
-  "name": "bee-agent-framework-starter",
+  "name": "beeai-framework-starter",
   "type": "module",
   "version": "0.0.1",
   "private": true,
@@ -12,13 +12,13 @@
   ],
   "main": "./dist/agent.js",
   "types": "./dist/agent.d.ts",
-  "homepage": "https://github.com/i-am-bee/bee-agent-framework-starter#readme",
+  "homepage": "https://github.com/i-am-bee/beeai-framework-starter#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/i-am-bee/bee-agent-framework-starter.git"
+    "url": "git+https://github.com/i-am-bee/beeai-framework-starter.git"
   },
   "bugs": {
-    "url": "https://github.com/i-am-bee/bee-agent-framework-starter/issues"
+    "url": "https://github.com/i-am-bee/beeai-framework-starter/issues"
   },
   "scripts": {
     "start": "npm exec tsx",
@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@opentelemetry/sdk-node": "^0.57.0",
-    "bee-agent-framework": "^0.1.1",
+    "beeai-framework": "^0.1.2",
     "dotenv": "^16.4.5",
     "pino": "^9.4.0",
     "zod": "^3.23.8"
